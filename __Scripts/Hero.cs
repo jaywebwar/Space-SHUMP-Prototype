@@ -14,9 +14,12 @@ public class Hero : MonoBehaviour {
 
     bool ___________________________________________;
 
+    public Bounds bounds;
+
     private void Awake()
     {
         S = this;//set singleton
+        bounds = Utils.CombineBoundsOfChildren(this.gameObject);
     }
 	
 	// Update is called once per frame
@@ -33,5 +36,7 @@ public class Hero : MonoBehaviour {
 
         //rotate ship to make movement feel more dynamic
         transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
+
+        //TODO update the center of bounds with the ships position
 	}
 }
