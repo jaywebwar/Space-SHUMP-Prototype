@@ -34,9 +34,16 @@ public class Hero : MonoBehaviour {
         pos.y += yAxis * speed * Time.deltaTime;
         transform.position = pos;
 
+        //Keep ship constrained to the screen
+        bounds.center = transform.position;
+        Vector3 offset = Utils.ScreenBoundsCheck(bounds, BoundsTest.onScreen);
+        if(offset != Vector3.zero)
+        {
+            pos -= offset;
+            transform.position = pos;
+        }
+
         //rotate ship to make movement feel more dynamic
         transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
-
-        //TODO update the center of bounds with the ships position
 	}
 }

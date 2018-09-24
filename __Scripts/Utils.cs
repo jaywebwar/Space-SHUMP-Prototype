@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BoundsTest
+{
+    center,     //is the center of the go on screen?
+    onScreen,   //are the bounds entirely on screen?
+    offScreen   //are the bounds entirely off screen?
+}
+
 public class Utils : MonoBehaviour {
 
 	//creates bounds that encapsulate the two bounds passed in
@@ -49,5 +56,168 @@ public class Utils : MonoBehaviour {
             b = BoundsUnion(b, CombineBoundsOfChildren(t.gameObject));
         }
         return b;
+    }
+
+    //read-only property for camera bounds
+    static public Bounds camBounds
+    {
+        get
+        {
+            //if _camBounds hasn't been set, set them using the default camera
+            if(_camBounds.size == Vector3.zero)
+            {
+                SetCameraBounds();
+            }
+            return _camBounds;
+        }
+    }
+
+    static private Bounds _camBounds;
+
+    public static void SetCameraBounds(Camera cam = null)
+    {
+        //if no camera was passed in, use the main camera
+        if (cam == null) cam = Camera.main;
+
+        //Two assumptions are made for this method
+        //1) Camera is Orthographic
+        //2) Camera is at rotation R[0,0,0]
+
+        //Make vector3's at the topLeft and BotRight of the screen coordinates
+        Vector3 topLeft = new Vector3(0, 0, 0);
+        Vector3 botRight = new Vector3(Screen.width, Screen.height, 0);
+
+        //covnert to worlds coords
+        Vector3 boundsTLN = cam.ScreenToWorldPoint(topLeft);
+        Vector3 boundsBRF = cam.ScreenToWorldPoint(botRight);
+        //adjust z's to near and far
+        boundsTLN.z += cam.nearClipPlane;
+        boundsBRF.z += cam.farClipPlane;
+
+        //find the center of the bounds
+        Vector3 center = (boundsTLN + boundsBRF) / 2f;
+        _camBounds = new Bounds(center, Vector3.zero);
+
+        //expand bounds to encapsulate the entents
+        _camBounds.Encapsulate(boundsTLN);
+        _camBounds.Encapsulate(boundsBRF);
+    }
+
+    public static Vector3 ScreenBoundsCheck(Bounds bnd, BoundsTest test = BoundsTest.center)
+    {
+        return (BoundsInBoundsCheck(camBounds, bnd, test));
+    }
+
+    //checks to see if lilB are within bigB
+    public static Vector3 BoundsInBoundsCheck(Bounds bigB, Bounds lilB, BoundsTest test = BoundsTest.onScreen)
+    {
+        //behavior depends on BoundsTest, selected onScreen by default
+
+        Vector3 pos = lilB.center;
+        Vector3 offset = Vector3.zero;
+
+        switch (test)
+        {
+            //center test dertermine what offset is require to move lilB's center back into bigB
+            case BoundsTest.center:
+                if (bigB.Contains(pos))
+                {
+                    return Vector3.zero;
+                }
+                if(pos.x > bigB.max.x)
+                {
+                    offset.x = pos.x - bigB.max.x;
+                }
+                else if(pos.x < bigB.min.x)
+                {
+                    offset.x = pos.x - bigB.min.x;
+                }
+                if(pos.y > bigB.max.y)
+                {
+                    offset.y = pos.y - bigB.max.y;
+                }
+                else if(pos.y < bigB.min.y)
+                {
+                    offset.y = pos.y - bigB.min.y;
+                }
+                if(pos.z > bigB.max.z)
+                {
+                    offset.z = pos.z - bigB.max.z;
+                }
+                else if(pos.z < bigB.min.z)
+                {
+                    offset.z = pos.z - bigB.min.z;
+                }
+                return offset;
+
+            //the onScreen test determines what offset would have to be to keep all of lilB inside of bigB
+            case BoundsTest.onScreen:
+                if(bigB.Contains(lilB.min) && bigB.Contains(lilB.max))
+                {
+                    return Vector3.zero;
+                }
+
+                if(lilB.max.x > bigB.max.x)
+                {
+                    offset.x = lilB.max.x - bigB.max.x;
+                }
+                else if(lilB.min.x < bigB.min.x)
+                {
+                    offset.x = lilB.min.x - bigB.min.x;
+                }
+                if (lilB.max.y > bigB.max.y)
+                {
+                    offset.y = lilB.max.y - bigB.max.y;
+                }
+                else if (lilB.min.y < bigB.min.y)
+                {
+                    offset.y = lilB.min.y - bigB.min.y;
+                }
+                if (lilB.max.z > bigB.max.z)
+                {
+                    offset.z = lilB.max.z - bigB.max.z;
+                }
+                else if (lilB.min.z < bigB.min.z)
+                {
+                    offset.z = lilB.min.z - bigB.min.z;
+                }
+                return offset;
+
+            //the offScreen test determines what offset would need to be to get any of lilB into bigB
+            case BoundsTest.offScreen:
+                bool cMin = bigB.Contains(lilB.min);
+                bool cMax = bigB.Contains(lilB.max);
+                if(cMin || cMax)
+                {
+                    return Vector3.zero;
+                }
+
+                if(lilB.min.x > bigB.max.x)
+                {
+                    offset.x = lilB.min.x - bigB.max.x;
+                }
+                else if(lilB.max.x < bigB.min.x)
+                {
+                    offset.x = lilB.max.x - bigB.min.x;
+                }
+                if (lilB.min.y > bigB.max.y)
+                {
+                    offset.y = lilB.min.y - bigB.max.y;
+                }
+                else if (lilB.max.y < bigB.min.y)
+                {
+                    offset.y = lilB.max.y - bigB.min.y;
+                }
+                if (lilB.min.z > bigB.max.z)
+                {
+                    offset.z = lilB.min.z - bigB.max.z;
+                }
+                else if (lilB.max.z < bigB.min.z)
+                {
+                    offset.z = lilB.max.z - bigB.min.z;
+                }
+                return offset;
+        }
+        return Vector3.zero;
     }
 }
