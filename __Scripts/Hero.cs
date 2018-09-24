@@ -21,7 +21,7 @@ public class Hero : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //get coordinate info from input
+        //get coordinate info from input (This works for wasd, arrows, and a joystick)
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
 
