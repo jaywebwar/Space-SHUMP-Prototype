@@ -1,17 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Main : MonoBehaviour {
 
     static public Main S;
+    static public Dictionary<WeaponType, WeaponDefinition> W_DEFS;
 
     public GameObject[] prefabEnemies;
     public float enemySpawnPerSecond = 0.5f;
     public float enemySpawnPadding = 1.5f;
+    public WeaponDefinition[] weaponDefinitions;
 
     public bool _______________________________;
 
+    public WeaponType[] activeWeaponTypes;
     public float enemySpawnRate;
 
     private void Awake()
@@ -21,6 +25,32 @@ public class Main : MonoBehaviour {
         Utils.SetCameraBounds(this.GetComponent<Camera>());
         enemySpawnRate = 1f / enemySpawnPerSecond;
         Invoke("SpawnEnemy", enemySpawnRate);
+
+        W_DEFS = new Dictionary<WeaponType, WeaponDefinition>();
+        foreach( WeaponDefinition def in weaponDefinitions)
+        {
+            W_DEFS[def.type] = def;
+        }
+    }
+
+    static public WeaponDefinition GetWeaponDefinition(WeaponType wt)
+    {
+        //need to check if key exists
+        if (W_DEFS.ContainsKey(wt))
+        {
+            return W_DEFS[wt];
+        }
+        //this returns a def for WeaponType.none
+        return new WeaponDefinition();
+    }
+
+    private void Start()
+    {
+        activeWeaponTypes = new WeaponType[weaponDefinitions.Length];
+        for(int i=0; i<weaponDefinitions.Length; i++)
+        {
+            activeWeaponTypes[i] = weaponDefinitions[i].type;
+        }
     }
 
     public void SpawnEnemy()
@@ -37,5 +67,17 @@ public class Main : MonoBehaviour {
         go.transform.position = pos;
         //call SpawnEnemy again in a couple seconds
         Invoke("SpawnEnemy", enemySpawnRate);
+    }
+
+    public void DelayedRestart(float delay)
+    {
+        //Invoke restart method
+        Invoke("Restart", delay);
+    }
+
+    public void Restart()
+    {
+        //reload scene 0
+        SceneManager.LoadScene("_Scene_0");
     }
 }

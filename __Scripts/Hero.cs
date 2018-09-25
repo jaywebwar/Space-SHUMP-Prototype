@@ -7,6 +7,8 @@ public class Hero : MonoBehaviour {
     static public Hero S;
 
     //inspector
+    public float gameRestartDelay = 2f;
+    //controls movement of the ship
     public float speed = 30;
     public float rollMult = -45;
     public float pitchMult = 30;
@@ -15,6 +17,8 @@ public class Hero : MonoBehaviour {
     bool ___________________________________________;
 
     public Bounds bounds;
+    public delegate void WeaponFireDelegate();//creates the delegate type
+    public WeaponFireDelegate fireDelegate;//creates the delegate variable of that type
 
     private void Awake()
     {
@@ -45,6 +49,13 @@ public class Hero : MonoBehaviour {
 
         //rotate ship to make movement feel more dynamic
         transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
+
+        //Use the fireDelegate to fire weapons
+        //Axis("Jump") is our trigger, and we want to make sure fireDelegate is set
+        if(Input.GetAxis("Jump") == 1 && fireDelegate != null)
+        {
+            fireDelegate();
+        }
 	}
 
     //This variable holds reference to the last triggering object
@@ -89,6 +100,8 @@ public class Hero : MonoBehaviour {
             if(value < 0)
             {
                 Destroy(this.gameObject);//destroy ship
+                //tell Main to restart the game after delay
+                Main.S.DelayedRestart(gameRestartDelay);
             }
         }
     }
