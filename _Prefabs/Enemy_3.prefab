@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4116133187486408}
   - component: {fileID: 33561706746918968}
   - component: {fileID: 23217784792426096}
-  - component: {fileID: 135247378034757010}
+  - component: {fileID: 136095859307624934}
   m_Layer: 10
   m_Name: Wing
   m_TagString: Untagged
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 4314772377499182}
   - component: {fileID: 33403743241882054}
   - component: {fileID: 23298579353602154}
-  - component: {fileID: 135350222738746318}
+  - component: {fileID: 136142795742501308}
   m_Layer: 10
   m_Name: CockpitR
   m_TagString: Untagged
@@ -56,6 +56,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4430100412450966}
   - component: {fileID: 54284093483474170}
+  - component: {fileID: 114452378516043856}
   m_Layer: 10
   m_Name: Enemy_3
   m_TagString: Enemy
@@ -73,7 +74,7 @@ GameObject:
   - component: {fileID: 4571048404559590}
   - component: {fileID: 33609199330179866}
   - component: {fileID: 23375981185634270}
-  - component: {fileID: 135120108165504420}
+  - component: {fileID: 136511938063642182}
   m_Layer: 10
   m_Name: CockpitL
   m_TagString: Untagged
@@ -114,7 +115,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1896101883966288}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.07134748, y: 0.74608517, z: 2.2636719}
+  m_LocalPosition: {x: -9.54, y: 0.74608517, z: 2.2636719}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4571048404559590}
@@ -277,20 +278,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
---- !u!135 &135120108165504420
-SphereCollider:
+--- !u!114 &114452378516043856
+MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1999135088086474}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_GameObject: {fileID: 1896101883966288}
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &135247378034757010
-SphereCollider:
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3958787a7658441b221e259392f2ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  fireRate: 0.3
+  health: 10
+  score: 100
+  showDamageForFrames: 2
+  powerUpDropChance: 1
+  _____________________________: 0
+  originalColors: []
+  materials: []
+  remainingDamageFrames: 0
+  bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  boundsCenterOffset: {x: 0, y: 0, z: 0}
+  points: []
+  birthTime: 0
+  lifeTime: 10
+--- !u!136 &136095859307624934
+CapsuleCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -298,11 +315,12 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 0
   m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &135350222738746318
-SphereCollider:
+--- !u!136 &136142795742501308
+CapsuleCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -310,6 +328,20 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &136511938063642182
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1999135088086474}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

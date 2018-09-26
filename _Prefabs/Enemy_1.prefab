@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4397563529702886}
   - component: {fileID: 33363894376746506}
   - component: {fileID: 23089402250391218}
-  - component: {fileID: 135134730252916506}
+  - component: {fileID: 136975586253729708}
   m_Layer: 10
   m_Name: Wing
   m_TagString: Untagged
@@ -38,6 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4699391196152610}
   - component: {fileID: 54537402182174352}
+  - component: {fileID: 114078868699899682}
   m_Layer: 10
   m_Name: Enemy_1
   m_TagString: Enemy
@@ -96,7 +97,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1416157784692270}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.07134748, y: 0.74608517, z: 2.2636719}
+  m_LocalPosition: {x: -13.01, y: -7.43, z: 2.2636719}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4383438970930784}
@@ -203,18 +204,34 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
---- !u!135 &135134730252916506
-SphereCollider:
+--- !u!114 &114078868699899682
+MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1402416724830082}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_GameObject: {fileID: 1416157784692270}
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee01e53fb10acd4a8679fa22c901a83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  fireRate: 0.3
+  health: 10
+  score: 100
+  showDamageForFrames: 2
+  powerUpDropChance: 1
+  _____________________________: 0
+  originalColors: []
+  materials: []
+  remainingDamageFrames: 0
+  bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  boundsCenterOffset: {x: 0, y: 0, z: 0}
+  waveFrequency: 2
+  waveWidth: 4
+  waveRotY: 45
 --- !u!135 &135773790294128866
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -226,4 +243,17 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &136975586253729708
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1402416724830082}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 0
   m_Center: {x: 0, y: 0, z: 0}
