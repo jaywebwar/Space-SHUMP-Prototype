@@ -14,6 +14,8 @@ public class Hero : MonoBehaviour {
     public float pitchMult = 30;
     private float _shieldLevel = 1;
 
+    public Weapon[] weapons;
+
     bool ___________________________________________;
 
     public Bounds bounds;
@@ -24,10 +26,23 @@ public class Hero : MonoBehaviour {
     {
         S = this;//set singleton
         bounds = Utils.CombineBoundsOfChildren(this.gameObject);
+
+        //we move this to Start to avoid a race condition between this awake function and Main's awake function.  
+        //Awake functions all run before any Start functions.
+        //reset the weapons to provide the hero with 1 blaster
+        //ClearWeapons();
+        //weapons[0].SetType(WeaponType.blaster);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+        //reset the weapons to provide the hero with 1 blaster
+        ClearWeapons();
+        weapons[0].SetType(WeaponType.blaster);
+    }
+
+    // Update is called once per frame
+    void Update () {
         //get coordinate info from input (This works for wasd, arrows, and a joystick)
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
@@ -77,6 +92,10 @@ public class Hero : MonoBehaviour {
                 shieldLevel--;
                 Destroy(go);
             }
+            else if(go.tag == "PowerUp")
+            {
+                AbsorbPowerUp(go);
+            }
             else
             {
                 print("Triggered: " + go.name);
@@ -103,6 +122,54 @@ public class Hero : MonoBehaviour {
                 //tell Main to restart the game after delay
                 Main.S.DelayedRestart(gameRestartDelay);
             }
+        }
+    }
+
+    public void AbsorbPowerUp(GameObject go)
+    {
+        PowerUp pu = go.GetComponent<PowerUp>();
+        switch (pu.type)
+        {
+            case WeaponType.shield:
+                shieldLevel++;
+                break;
+            default:
+                if (pu.type == weapons[0].type)
+                {
+                    //increase the number of weapons
+                    Weapon w = GetEmptyWeaponSlot();
+                    if(w != null)
+                    {
+                        w.SetType(pu.type);
+                    }
+                }
+                else
+                {
+                    ClearWeapons();
+                    weapons[0].SetType(pu.type);
+                }
+                break;
+        }
+        pu.AbsorbedBy(this.gameObject);
+    }
+
+    Weapon GetEmptyWeaponSlot()
+    {
+        for(int i=0; i<weapons.Length; i++)
+        {
+            if(weapons[i].type == WeaponType.none)
+            {
+                return weapons[i];
+            }
+        }
+        return null;
+    }
+
+    void ClearWeapons()
+    {
+        foreach(Weapon w in weapons)
+        {
+            w.SetType(WeaponType.none);
         }
     }
 }
